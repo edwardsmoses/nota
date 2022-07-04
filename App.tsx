@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -12,9 +12,11 @@ import {
   Path,
   Skia,
   useCanvasRef,
+  SkPath,
 } from '@shopify/react-native-skia';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {NOTE_KEY, storage} from './src/storage';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -25,19 +27,29 @@ const App = () => {
 
   const canvasRef = useCanvasRef();
 
-  const path = Skia.Path.Make();
+  let path = useRef<SkPath>(Skia.Path.Make());
+
+  useEffect(() => {
+    if (!path.current) {
+      path.current =
+        Skia.Path.MakeFromSVGString(storage.getString(NOTE_KEY) || '') ||
+        Skia.Path.Make();
+    }
+  }, []);
 
   // Touch handler
   const touchHandler = useTouchHandler({
     onStart: touch => {
       const {x, y} = touch;
-      path.moveTo(x, y);
+      path.current.moveTo(x, y);
     },
     onActive: touch => {
       const {x, y} = touch;
-      path.lineTo(x, y);
+      path.current.lineTo(x, y);
     },
-    onEnd: ({}) => {},
+    onEnd: ({}) => {
+      storage.set(NOTE_KEY, path.current.toSVGString());
+    },
   });
 
   return (
@@ -45,7 +57,12 @@ const App = () => {
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <Canvas style={styles.canvas} ref={canvasRef} onTouch={touchHandler}>
         <Fill color="white" />
-        <Path path={path} color="lightblue" style={'stroke'} strokeWidth={3} />
+        <Path
+          path={path.current}
+          color="lightblue"
+          style={'stroke'}
+          strokeWidth={3}
+        />
       </Canvas>
     </SafeAreaView>
   );
