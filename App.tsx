@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -26,15 +26,13 @@ const App = () => {
   };
 
   const canvasRef = useCanvasRef();
-
   let path = useRef<SkPath>(Skia.Path.Make());
+  const [forceReRender, setForceReRender] = useState(false);
 
   useEffect(() => {
-    if (!path.current) {
-      path.current =
-        Skia.Path.MakeFromSVGString(storage.getString(NOTE_KEY) || '') ||
-        Skia.Path.Make();
-    }
+    const svgString = storage.getString(NOTE_KEY) || '';
+    path.current = Skia.Path.MakeFromSVGString(svgString) || Skia.Path.Make();
+    setForceReRender(true);
   }, []);
 
   // Touch handler
