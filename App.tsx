@@ -9,6 +9,8 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {Board} from '@components/Board';
 
+import {Provider as PaperProvider} from 'react-native-paper';
+
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -24,6 +26,14 @@ const App = () => {
   );
 };
 
-const styles = StyleSheet.create({});
+// const styles = StyleSheet.create({});
 
-export default App;
+const Main = () => {
+  return (
+    <PaperProvider>
+      <App />
+    </PaperProvider>
+  );
+};
+
+export default Main;
