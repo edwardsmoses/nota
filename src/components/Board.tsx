@@ -10,7 +10,7 @@ import {
   SkPath,
 } from '@shopify/react-native-skia';
 
-import {NOTE_KEY, storage} from '@storage/';
+import {NOTE_KEY, storage} from '@storage/storage';
 
 export const Board = () => {
   //Canvas Ref
