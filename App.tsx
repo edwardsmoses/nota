@@ -6,9 +6,9 @@ import {
   useColorScheme,
 } from 'react-native';
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {Board} from '@components/Board';
 import {Toolbox} from '@components/Toolbox';
+import * as Colors from '@utils/colors';
 
 import {Provider as PaperProvider} from 'react-native-paper';
 
@@ -16,7 +16,7 @@ const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: isDarkMode ? Colors.BLACK : Colors.WHITE,
   };
 
   return (
