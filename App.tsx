@@ -2,12 +2,13 @@ import React from 'react';
 import {
   SafeAreaView,
   StatusBar,
-  StyleSheet,
+  // StyleSheet,
   useColorScheme,
 } from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {Board} from '@components/Board';
+import {Toolbox} from '@components/Toolbox';
 
 import {Provider as PaperProvider} from 'react-native-paper';
 
@@ -22,6 +23,7 @@ const App = () => {
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <Board />
+      <Toolbox />
     </SafeAreaView>
   );
 };
