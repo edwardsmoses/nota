@@ -11,9 +11,11 @@ import {
   BlendMode,
   SkiaView,
   useDrawCallback,
+  PaintStyle,
 } from '@shopify/react-native-skia';
 
 import {storage, useNote} from '@storage/storage';
+import {COLORS} from '@utils/colors';
 
 const paint = Skia.Paint();
 paint.setAntiAlias(true);
@@ -63,20 +65,35 @@ export const Board = () => {
   const height = 256;
   const r = 92;
 
-  const onDraw = useDrawCallback(canvas => {
-    // Cyan Circle
-    const cyan = paint.copy();
-    cyan.setColor(Skia.Color('cyan'));
-    canvas.drawCircle(r, r, r, cyan);
-    // Magenta Circle
-    const magenta = paint.copy();
-    magenta.setColor(Skia.Color('magenta'));
-    canvas.drawCircle(width - r, r, r, magenta);
-    // Yellow Circle
-    const yellow = paint.copy();
-    yellow.setColor(Skia.Color('yellow'));
-    canvas.drawCircle(width / 2, height - r, r, yellow);
-  });
+  const onDraw = useDrawCallback(
+    canvas => {
+      // Cyan Circle
+      const cyan = paint.copy();
+      cyan.setColor(Skia.Color('cyan'));
+      canvas.drawCircle(r, r, r, cyan);
+
+      const svgString = storage.getString(currentPageKey) || '';
+
+      const drawPaint = paint.copy();
+      drawPaint.setColor(Skia.Color(COLORS.LIGHT_BLACK));
+      drawPaint.setStyle(PaintStyle.Stroke);
+      drawPaint.setStrokeWidth(2);
+
+      const drawPath =
+        Skia.Path.MakeFromSVGString(svgString) || Skia.Path.Make();
+      canvas.drawPath(drawPath, drawPaint);
+
+      // Magenta Circle
+      const magenta = paint.copy();
+      magenta.setColor(Skia.Color('magenta'));
+      canvas.drawCircle(width - r, r, r, magenta);
+      // Yellow Circle
+      const yellow = paint.copy();
+      yellow.setColor(Skia.Color('yellow'));
+      canvas.drawCircle(width / 2, height - r, r, yellow);
+    },
+    [currentPageKey],
+  );
 
   return <SkiaView style={styles.canvas} onDraw={onDraw} />;
 };
@@ -93,7 +110,6 @@ export const DrawingBoard = () => {
   // Touch handler
   const touchHandler = useTouchHandler({
     onStart: touch => {
-      console.log('start');
       const {x, y} = touch;
       path.current.moveTo(x, y);
     },
