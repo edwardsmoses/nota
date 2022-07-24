@@ -81,10 +81,54 @@ export const Board = () => {
   return <SkiaView style={styles.canvas} onDraw={onDraw} />;
 };
 
+export const DrawingBoard = () => {
+  //Canvas Ref
+  const canvasRef = useCanvasRef();
+
+  //The Path for the Drawing Board..
+  let path = useRef<SkPath>(Skia.Path.Make());
+
+  const {currentPageKey} = useNote();
+
+  // Touch handler
+  const touchHandler = useTouchHandler({
+    onStart: touch => {
+      console.log('start');
+      const {x, y} = touch;
+      path.current.moveTo(x, y);
+    },
+    onActive: touch => {
+      const {x, y} = touch;
+      path.current.lineTo(x, y);
+    },
+    onEnd: ({}) => {
+      storage.set(currentPageKey, path.current.toSVGString());
+    },
+  });
+
+  return (
+    <Canvas
+      style={[styles.canvas, styles.drawingCanvas]}
+      ref={canvasRef}
+      onTouch={touchHandler}>
+      <Path
+        path={path.current}
+        color="lightblue"
+        style={'stroke'}
+        strokeWidth={3}
+      />
+    </Canvas>
+  );
+};
+
 const styles = StyleSheet.create({
   canvas: {
     height: '100%',
     width: '100%',
-    backgroundColor: '#FEFEFE',
+  },
+  drawingCanvas: {
+    ...StyleSheet.absoluteFillObject,
+    flex: 1,
+    display: 'flex',
   },
 });

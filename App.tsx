@@ -6,7 +6,7 @@ import {
   useColorScheme,
 } from 'react-native';
 
-import {Board} from '@components/Board';
+import {Board, DrawingBoard} from '@components/Board';
 import {Toolbox} from '@components/Toolbox';
 import {COLORS} from '@utils/colors';
 
@@ -23,6 +23,7 @@ const App = () => {
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <Board />
+      <DrawingBoard />
       <Toolbox />
     </SafeAreaView>
   );
