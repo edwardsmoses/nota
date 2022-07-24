@@ -8,9 +8,16 @@ import {
   Skia,
   useCanvasRef,
   SkPath,
+  BlendMode,
+  SkiaView,
+  useDrawCallback,
 } from '@shopify/react-native-skia';
 
 import {storage, useNote} from '@storage/storage';
+
+const paint = Skia.Paint();
+paint.setAntiAlias(true);
+paint.setBlendMode(BlendMode.Multiply);
 
 export const Board = () => {
   //Canvas Ref
@@ -29,11 +36,11 @@ export const Board = () => {
 
     console.log('when are you called, it is now', currentPageKey);
     const svgString = storage.getString(currentPageKey) || '';
-    console.log(svgString);
+    // console.log(svgString);
 
     path.current = Skia.Path.MakeFromSVGString(svgString);
 
-    console.log(path.current.toSVGString());
+    // console.log(path.current.toSVGString());
   }, [currentPageKey]);
 
   // Touch handler
@@ -52,17 +59,26 @@ export const Board = () => {
     },
   });
 
-  return (
-    <Canvas style={styles.canvas} ref={canvasRef} onTouch={touchHandler}>
-      <Fill color="white" />
-      <Path
-        path={path.current}
-        color="lightblue"
-        style={'stroke'}
-        strokeWidth={3}
-      />
-    </Canvas>
-  );
+  const width = 256;
+  const height = 256;
+  const r = 92;
+
+  const onDraw = useDrawCallback(canvas => {
+    // Cyan Circle
+    const cyan = paint.copy();
+    cyan.setColor(Skia.Color('cyan'));
+    canvas.drawCircle(r, r, r, cyan);
+    // Magenta Circle
+    const magenta = paint.copy();
+    magenta.setColor(Skia.Color('magenta'));
+    canvas.drawCircle(width - r, r, r, magenta);
+    // Yellow Circle
+    const yellow = paint.copy();
+    yellow.setColor(Skia.Color('yellow'));
+    canvas.drawCircle(width / 2, height - r, r, yellow);
+  });
+
+  return <SkiaView style={styles.canvas} onDraw={onDraw} />;
 };
 
 const styles = StyleSheet.create({
