@@ -1,8 +1,13 @@
 import React, {useState} from 'react';
+import {StyleSheet} from 'react-native';
 import {FAB, Portal, Provider} from 'react-native-paper';
+import {COLORS} from '@utils/colors';
+import {useNote} from '@storage/storage';
 
 export const Toolbox = () => {
   const [open, setOpen] = useState(false);
+
+  const {addNewPage} = useNote();
 
   return (
     <Provider>
@@ -10,25 +15,10 @@ export const Toolbox = () => {
         <FAB.Group
           open={open}
           visible={true}
-          icon={open ? 'calendar-today' : 'plus'}
-          actions={[
-            {icon: 'plus', onPress: () => console.log('Pressed add')},
-            {
-              icon: 'star',
-              label: 'Star',
-              onPress: () => console.log('Pressed star'),
-            },
-            {
-              icon: 'email',
-              label: 'Email',
-              onPress: () => console.log('Pressed email'),
-            },
-            {
-              icon: 'bell',
-              label: 'Remind',
-              onPress: () => console.log('Pressed notifications'),
-            },
-          ]}
+          color={COLORS.LIGHT_BLACK}
+          icon="tools"
+          fabStyle={styles.groupIcon}
+          actions={[{icon: 'plus', onPress: addNewPage}]}
           onStateChange={state => {
             setOpen(state.open);
           }}
@@ -42,3 +32,9 @@ export const Toolbox = () => {
     </Provider>
   );
 };
+
+const styles = StyleSheet.create({
+  groupIcon: {
+    backgroundColor: COLORS.LIGHT_GREY,
+  },
+});

@@ -10,7 +10,7 @@ import {
   SkPath,
 } from '@shopify/react-native-skia';
 
-import {NOTE_KEY, storage} from '@storage/storage';
+import {storage, useNote} from '@storage/storage';
 
 export const Board = () => {
   //Canvas Ref
@@ -20,13 +20,21 @@ export const Board = () => {
   let path = useRef<SkPath>(Skia.Path.Make());
 
   //State for forcing re-render (used atm for when the app loads svg from storage)
-  const [, setForceReRender] = useState(false);
+  const [forceReRenderVisible, setForceReRender] = useState(false);
+
+  const {currentPageKey} = useNote();
 
   useEffect(() => {
-    const svgString = storage.getString(NOTE_KEY) || '';
-    path.current = Skia.Path.MakeFromSVGString(svgString) || Skia.Path.Make();
-    setForceReRender(true);
-  }, []);
+    path.current.reset();
+
+    console.log('when are you called, it is now', currentPageKey);
+    const svgString = storage.getString(currentPageKey) || '';
+    console.log(svgString);
+
+    path.current = Skia.Path.MakeFromSVGString(svgString);
+
+    console.log(path.current.toSVGString());
+  }, [currentPageKey]);
 
   // Touch handler
   const touchHandler = useTouchHandler({
@@ -39,7 +47,8 @@ export const Board = () => {
       path.current.lineTo(x, y);
     },
     onEnd: ({}) => {
-      storage.set(NOTE_KEY, path.current.toSVGString());
+      path.current.close();
+      storage.set(currentPageKey, path.current.toSVGString());
     },
   });
 
