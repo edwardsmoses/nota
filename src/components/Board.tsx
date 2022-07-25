@@ -2,7 +2,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {
   Canvas,
-  Fill,
   useTouchHandler,
   Path,
   Skia,
