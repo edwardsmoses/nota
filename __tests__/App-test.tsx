@@ -9,16 +9,12 @@ import App from '../App';
 // Note: test renderer must be required after react-native.
 import renderer from 'react-test-renderer';
 
-jest.mock('@shopify/react-native-skia', () => ({
-  Skia: {
-    Paint: () => {
-      return {
-        setAntiAlias: jest.fn(),
-        setBlendMode: jest.fn(),
-      };
-    },
-  },
-  BlendMode: {},
+jest.useFakeTimers();
+
+jest.mock('@components/Board', () => ({
+  __esModule: true,
+  Board: 'Board',
+  DrawingBoard: 'DrawingBoard',
 }));
 
 it('renders correctly', () => {
