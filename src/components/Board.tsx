@@ -39,7 +39,7 @@ export const Board = () => {
     const svgString = storage.getString(currentPageKey) || '';
     // console.log(svgString);
 
-    path.current = Skia.Path.MakeFromSVGString(svgString);
+    path.current = Skia.Path.MakeFromSVGString(svgString) || Skia.Path.Make();
 
     // console.log(path.current.toSVGString());
   }, [currentPageKey]);
