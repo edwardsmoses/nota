@@ -9,14 +9,12 @@ import App from '../App';
 // Note: test renderer must be required after react-native.
 import renderer from 'react-test-renderer';
 
-jest.useFakeTimers();
-
 jest.mock('@components/Board', () => ({
   __esModule: true,
   Board: 'Board',
   DrawingBoard: 'DrawingBoard',
 }));
 
-it('renders correctly', () => {
+it('App renders correctly', () => {
   renderer.create(<App />);
 });
