@@ -3,3 +3,9 @@ export type NotePage = {
   label: string;
   dateCreated: number;
 };
+
+export type Annotation = {
+  path: string;
+  color: string;
+  width: number;
+};
