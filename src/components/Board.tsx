@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {StyleSheet} from 'react-native';
 import {
   Canvas,
@@ -14,6 +14,7 @@ import {
 } from '@shopify/react-native-skia';
 
 import {storage, useNote} from '@storage/storage';
+import {Annotation} from '@utils/types';
 import {COLORS} from '@utils/colors';
 
 const paint = Skia.Paint();
@@ -21,61 +22,28 @@ paint.setAntiAlias(true);
 paint.setBlendMode(BlendMode.Multiply);
 
 export const Board = () => {
-  //Canvas Ref
-  const canvasRef = useCanvasRef();
-
-  //The Path for the Drawing Board..
-  let path = useRef<SkPath>(Skia.Path.Make());
-
-  //State for forcing re-render (used atm for when the app loads svg from storage)
-  const [forceReRenderVisible, setForceReRender] = useState(false);
-
   const {currentPageKey} = useNote();
-
-  useEffect(() => {
-    path.current.reset();
-
-    console.log('when are you called, it is now', currentPageKey);
-    const svgString = storage.getString(currentPageKey) || '';
-    // console.log(svgString);
-
-    path.current = Skia.Path.MakeFromSVGString(svgString) || Skia.Path.Make();
-
-    // console.log(path.current.toSVGString());
-  }, [currentPageKey]);
-
-  // Touch handler
-  const touchHandler = useTouchHandler({
-    onStart: touch => {
-      const {x, y} = touch;
-      path.current.moveTo(x, y);
-    },
-    onActive: touch => {
-      const {x, y} = touch;
-      path.current.lineTo(x, y);
-    },
-    onEnd: ({}) => {
-      path.current.close();
-      storage.set(currentPageKey, path.current.toSVGString());
-    },
-  });
-
-  const width = 256;
-  const height = 256;
-  const r = 92;
 
   const onDraw = useDrawCallback(
     canvas => {
-      const svgString = storage.getString(currentPageKey) || '';
+      const pathsInStorage = storage.getString(currentPageKey || '');
+      let paths: Annotation[] = [];
+      if (pathsInStorage) {
+        paths = JSON.parse(pathsInStorage || '') as Array<Annotation>;
+      }
 
-      const drawPaint = paint.copy();
-      drawPaint.setColor(Skia.Color(COLORS.LIGHT_BLACK));
-      drawPaint.setStyle(PaintStyle.Stroke);
-      drawPaint.setStrokeWidth(2);
+      paths.map(annotation => {
+        if (annotation && annotation.path) {
+          const drawPaint = paint.copy();
+          drawPaint.setColor(Skia.Color(annotation.color));
+          drawPaint.setStyle(PaintStyle.Stroke);
+          drawPaint.setStrokeWidth(annotation.width);
 
-      const drawPath =
-        Skia.Path.MakeFromSVGString(svgString) || Skia.Path.Make();
-      canvas.drawPath(drawPath, drawPaint);
+          const drawPath =
+            Skia.Path.MakeFromSVGString(annotation.path) || Skia.Path.Make();
+          canvas.drawPath(drawPath, drawPaint);
+        }
+      });
     },
     [currentPageKey],
   );
@@ -90,12 +58,17 @@ export const DrawingBoard = () => {
   //The Path for the Drawing Board..
   let path = useRef<SkPath>(Skia.Path.Make());
 
-  const {currentPageKey} = useNote();
+  const {setNotesInTransit, notesInTransit, currentPageKey} = useNote();
+
+  useEffect(() => {
+    path.current.reset();
+  }, [currentPageKey]);
 
   // Touch handler
   const touchHandler = useTouchHandler({
     onStart: touch => {
       const {x, y} = touch;
+      console.log('this is me', notesInTransit);
       path.current.moveTo(x, y);
     },
     onActive: touch => {
@@ -103,7 +76,7 @@ export const DrawingBoard = () => {
       path.current.lineTo(x, y);
     },
     onEnd: ({}) => {
-      storage.set(currentPageKey, path.current.toSVGString());
+      setNotesInTransit(path.current.toSVGString());
     },
   });
 
@@ -114,9 +87,9 @@ export const DrawingBoard = () => {
       onTouch={touchHandler}>
       <Path
         path={path.current}
-        color="lightblue"
+        color={COLORS.LIGHT_BLACK}
         style={'stroke'}
-        strokeWidth={3}
+        strokeWidth={2}
       />
     </Canvas>
   );
