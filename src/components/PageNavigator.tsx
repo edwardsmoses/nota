@@ -5,7 +5,14 @@ import {COLORS} from '@utils/colors';
 import {useNote} from '@storage/storage';
 
 export const PageNavigator = () => {
-  const {pages, currentPageKey} = useNote();
+  const {
+    pages,
+    currentPageKey,
+    isUserOnFirstPage,
+    isUserOnLastPage,
+    goToNextPage,
+    goToPreviousPage,
+  } = useNote();
   const currentPage = (pages || []).find(m => m.id === currentPageKey);
 
   //TODO -> idea for testing - test that this doesn't render when there's no current page, and also renders when there's a page existing..
@@ -20,14 +27,16 @@ export const PageNavigator = () => {
         color={COLORS.LIGHT_BLACK}
         size={28}
         style={styles.iconButton}
-        onPress={() => console.log('Pressed')}
+        disabled={isUserOnFirstPage}
+        onPress={goToPreviousPage}
       />
       <Text style={styles.titleLabel}>{currentPage.label}</Text>
       <IconButton
         icon="chevron-down"
         color={COLORS.LIGHT_BLACK}
         size={28}
-        onPress={() => console.log('Pressed')}
+        disabled={isUserOnLastPage}
+        onPress={goToNextPage}
         style={styles.iconButton}
       />
     </View>

@@ -14,6 +14,9 @@ export const useNote = () => {
   );
 
   const [pages, setPages] = useMMKVObject<Array<NotePage>>(NOTE_PAGES_KEY);
+  const currentPageIndex = (pages || []).findIndex(
+    m => m.id === currentPageKey,
+  );
 
   console.log('nota pages', pages, currentPageKey);
 
@@ -43,5 +46,26 @@ export const useNote = () => {
     setCurrentPageKey(newPage.id);
   };
 
-  return {addNewPage, currentPageKey: currentPageKey || ''};
+  /**
+   * Go to Previous Page..
+   */
+  const goToPreviousPage = () => {
+    //get the current index of the current page, and the previous (-1);
+    setCurrentPageKey((pages || [])[currentPageIndex - 1].id);
+  };
+
+  const goToNextPage = () => {
+    //get the current index of the current page, and the next (+1);
+    setCurrentPageKey((pages || [])[currentPageIndex + 1].id);
+  };
+
+  return {
+    addNewPage,
+    currentPageKey: currentPageKey || '',
+    pages,
+    goToPreviousPage,
+    goToNextPage,
+    isUserOnFirstPage: currentPageIndex === 0,
+    isUserOnLastPage: currentPageIndex === (pages || []).length - 1,
+  };
 };
