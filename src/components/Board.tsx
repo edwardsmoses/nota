@@ -66,11 +66,6 @@ export const Board = () => {
 
   const onDraw = useDrawCallback(
     canvas => {
-      // Cyan Circle
-      const cyan = paint.copy();
-      cyan.setColor(Skia.Color('cyan'));
-      canvas.drawCircle(r, r, r, cyan);
-
       const svgString = storage.getString(currentPageKey) || '';
 
       const drawPaint = paint.copy();
@@ -81,15 +76,6 @@ export const Board = () => {
       const drawPath =
         Skia.Path.MakeFromSVGString(svgString) || Skia.Path.Make();
       canvas.drawPath(drawPath, drawPaint);
-
-      // Magenta Circle
-      const magenta = paint.copy();
-      magenta.setColor(Skia.Color('magenta'));
-      canvas.drawCircle(width - r, r, r, magenta);
-      // Yellow Circle
-      const yellow = paint.copy();
-      yellow.setColor(Skia.Color('yellow'));
-      canvas.drawCircle(width / 2, height - r, r, yellow);
     },
     [currentPageKey],
   );
