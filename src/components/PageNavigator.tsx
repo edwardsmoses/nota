@@ -2,8 +2,17 @@ import {StyleSheet, View, Text} from 'react-native';
 import React from 'react';
 import {IconButton} from 'react-native-paper';
 import {COLORS} from '@utils/colors';
+import {useNote} from '@storage/storage';
 
 export const PageNavigator = () => {
+  const {pages, currentPageKey} = useNote();
+  const currentPage = (pages || []).find(m => m.id === currentPageKey);
+
+  //TODO -> idea for testing - test that this doesn't render when there's no current page, and also renders when there's a page existing..
+  if (!currentPage) {
+    return null;
+  }
+
   return (
     <View style={styles.topRow}>
       <IconButton
@@ -13,7 +22,7 @@ export const PageNavigator = () => {
         style={styles.iconButton}
         onPress={() => console.log('Pressed')}
       />
-      <Text style={styles.titleLabel}>Note Page 1</Text>
+      <Text style={styles.titleLabel}>{currentPage.label}</Text>
       <IconButton
         icon="chevron-down"
         color={COLORS.LIGHT_BLACK}

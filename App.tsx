@@ -8,6 +8,7 @@ import {
 
 import {Board, DrawingBoard} from '@components/Board';
 import {Toolbox} from '@components/Toolbox';
+import {PageNavigator} from '@components/PageNavigator';
 import {COLORS} from '@utils/colors';
 
 import {Provider as PaperProvider} from 'react-native-paper';
@@ -25,6 +26,7 @@ const App = () => {
       <Board />
       <DrawingBoard />
       <Toolbox />
+      <PageNavigator />
     </SafeAreaView>
   );
 };
