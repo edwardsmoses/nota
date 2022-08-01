@@ -58,7 +58,7 @@ export const DrawingBoard = () => {
   //The Path for the Drawing Board..
   let path = useRef<SkPath>(Skia.Path.Make());
 
-  const {setNotesInTransit, notesInTransit, currentPageKey} = useNote();
+  const {setNotesInTransit, currentPageKey} = useNote();
 
   useEffect(() => {
     path.current.reset();
@@ -68,7 +68,6 @@ export const DrawingBoard = () => {
   const touchHandler = useTouchHandler({
     onStart: touch => {
       const {x, y} = touch;
-      console.log('this is me', notesInTransit);
       path.current.moveTo(x, y);
     },
     onActive: touch => {

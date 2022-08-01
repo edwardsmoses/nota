@@ -1,7 +1,7 @@
 import {MMKV, useMMKVObject, useMMKVString} from 'react-native-mmkv';
 const {v4} = require('uuid');
 import {Annotation, NotePage} from '@utils/types';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect} from 'react';
 import {COLORS} from '@utils/colors';
 
 export const storage = new MMKV();
@@ -9,7 +9,6 @@ export const storage = new MMKV();
 export const NOTE_PAGES_KEY = 'nota_app_pages';
 export const NOTE_CURRENT_PAGE_KEY = 'nota_app_current_page_key';
 export const NOTE_IN_TRANSIT = 'nota_notes_in_transit';
-
 
 export const useNote = () => {
   const [currentPageKey, setCurrentPageKey] = useMMKVObject<string>(
@@ -21,15 +20,11 @@ export const useNote = () => {
     m => m.id === currentPageKey,
   );
 
-   /**
+  /**
    * Will Hold the notes in transist.. notes that aren't yet saved to main canvas state..
    * would be saved to the main when the color changes (in future), when prev page and next page, and others..
    */
   const [notesInTransit, setNotesInTransit] = useMMKVString(NOTE_IN_TRANSIT);
-
- 
-
-  console.log('nota pages', pages, currentPageKey);
 
   /**
    * When app loads, if there are no pages, add a default blank one..
@@ -41,12 +36,7 @@ export const useNote = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log('heres', notesInTransit);
-
   const saveNotesInTransit = () => {
-    console.log('is you called som');
-    console.log(notesInTransit);
-
     //get the current existing paths (annotations) in storage
     const pathsInStorage = storage.getString(currentPageKey || '');
 
@@ -59,15 +49,13 @@ export const useNote = () => {
       ...(paths || []),
       {
         color: COLORS.LIGHT_BLACK, //for now, it's hardcoded, in the future, would be customizable,
-        path: notesInTransit || "",
+        path: notesInTransit || '',
         width: 2,
       },
     ]; //add the new page..
 
-    console.log('is called here', newPaths);
-
     storage.set(currentPageKey || '', JSON.stringify(newPaths)); //stringify back..
-   setNotesInTransit('');
+    setNotesInTransit('');
   };
 
   /**
