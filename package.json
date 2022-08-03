@@ -11,6 +11,7 @@
     "xcode": "open ios/nota.xcworkspace"
   },
   "dependencies": {
+    "@notionhq/client": "^2.1.1",
     "@shopify/react-native-skia": "^0.1.134",
     "react": "18.0.0",
     "react-native": "0.69.0",
