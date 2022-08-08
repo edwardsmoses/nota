@@ -6,14 +6,12 @@ import {useNote} from '@storage/storage';
 
 export const PageNavigator = () => {
   const {
-    pages,
-    currentPageKey,
+    currentPage,
     isUserOnFirstPage,
     isUserOnLastPage,
     goToNextPage,
     goToPreviousPage,
   } = useNote();
-  const currentPage = (pages || []).find(m => m.id === currentPageKey);
 
   //TODO -> idea for testing - test that this doesn't render when there's no current page, and also renders when there's a page existing..
   if (!currentPage) {

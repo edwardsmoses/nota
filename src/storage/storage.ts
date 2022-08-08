@@ -99,6 +99,7 @@ export const useNote = () => {
     addNewPage,
     currentPageKey: currentPageKey || '',
     pages,
+    currentPage: (pages || []).find(m => m.id === currentPageKey),
     goToPreviousPage,
     goToNextPage,
     notesInTransit,
