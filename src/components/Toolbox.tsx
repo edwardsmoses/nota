@@ -1,17 +1,16 @@
 import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {FAB, Portal, Provider, Text} from 'react-native-paper';
+import {FAB, Portal, Provider} from 'react-native-paper';
 import {COLORS} from '@utils/colors';
 import {useNote} from '@storage/storage';
 
 export const Toolbox = () => {
   const [open, setOpen] = useState(false);
 
-  const {addNewPage, currentPage} = useNote();
+  const {addNewPage} = useNote();
 
   return (
     <>
-      <Text style={styles.hiddenText} testID="AddPage.PageId">{currentPage?.id}</Text>
       <Provider>
         <Portal>
           <FAB.Group
