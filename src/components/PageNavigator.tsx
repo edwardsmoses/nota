@@ -13,7 +13,6 @@ export const PageNavigator = () => {
     goToPreviousPage,
   } = useNote();
 
-  //TODO -> idea for testing - test that this doesn't render when there's no current page, and also renders when there's a page existing..
   if (!currentPage) {
     return null;
   }
