@@ -55,8 +55,6 @@ it('should disable the Next button when user is on the last page', () => {
   expect(wasNextButtonFired).toEqual(false);
 });
 
-//next button is disabled when it's the last page
-
 //previous button is disabled when it's the first page
 
 //on add, canvas is reset and drawing state is cleared
