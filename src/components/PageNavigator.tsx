@@ -24,6 +24,7 @@ export const PageNavigator = () => {
         color={COLORS.LIGHT_BLACK}
         size={28}
         style={styles.iconButton}
+        testID="Previous.Button"
         disabled={isUserOnFirstPage}
         onPress={goToPreviousPage}
       />

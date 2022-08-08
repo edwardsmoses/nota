@@ -10,6 +10,8 @@ import {fireEvent, render} from '@testing-library/react-native';
 let currentPage: NotePage | null = null;
 let isUserOnLastPage: boolean = false;
 let wasNextButtonFired: boolean = false;
+let isUserOnFirstPage: boolean = false;
+let wasLastButtonFired: boolean = false;
 
 //mock the 'useNote' module response
 jest.mock('@storage/storage', () => {
@@ -18,8 +20,12 @@ jest.mock('@storage/storage', () => {
     useNote: jest.fn(() => ({
       currentPage,
       isUserOnLastPage,
+      isUserOnFirstPage,
       goToNextPage: jest.fn(() => {
         wasNextButtonFired = true;
+      }),
+      goToPreviousPage: jest.fn(() => {
+        wasLastButtonFired = true;
       }),
     })),
   };
@@ -55,8 +61,23 @@ it('should disable the Next button when user is on the last page', () => {
   expect(wasNextButtonFired).toEqual(false);
 });
 
-//previous button is disabled when it's the first page
+it('should disable the Previous button when user is on the first page', () => {
+  //act that user is on first page
+  isUserOnFirstPage = true;
+
+  const {getByTestId} = render(<PageNavigator />);
+
+  //get the next button..
+  const button = getByTestId('Previous.Button');
+
+  //assert 1: that button is disabled prop.. (disabled isn't showing in the props -- figure out why)
+  expect(button.props.accessibilityState.disabled).toEqual(true);
+
+  //fire the button pressed
+  fireEvent.press(button);
+
+  //assert 2: that the state 'wasNextButtonFired' remains as false
+  expect(wasLastButtonFired).toEqual(false);
+});
 
 //on add, canvas is reset and drawing state is cleared
-
-//
