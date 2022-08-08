@@ -19,7 +19,12 @@ export const Toolbox = () => {
           icon="tools"
           fabStyle={styles.groupIcon}
           actions={[
-            {icon: 'plus', onPress: addNewPage, color: COLORS.LIGHT_BLACK},
+            {
+              icon: 'plus',
+              onPress: addNewPage,
+              color: COLORS.LIGHT_BLACK,
+              testID: 'AddPage.Button',
+            },
           ]}
           onStateChange={state => {
             setOpen(state.open);

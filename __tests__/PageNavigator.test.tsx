@@ -79,5 +79,3 @@ it('should disable the Previous button when user is on the first page', () => {
   //assert 2: that the state 'wasNextButtonFired' remains as false
   expect(wasLastButtonFired).toEqual(false);
 });
-
-//on add, canvas is reset and drawing state is cleared
