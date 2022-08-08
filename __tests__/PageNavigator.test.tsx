@@ -5,9 +5,11 @@ import {NotePage} from '@utils/types';
 
 // Note: test renderer must be required after react-native.
 
-import {render} from '@testing-library/react-native';
+import {fireEvent, render} from '@testing-library/react-native';
 
 let currentPage: NotePage | null = null;
+let isUserOnLastPage: boolean = false;
+let wasNextButtonFired: boolean = false;
 
 //mock the 'useNote' module response
 jest.mock('@storage/storage', () => {
@@ -15,6 +17,10 @@ jest.mock('@storage/storage', () => {
     __esModule: true,
     useNote: jest.fn(() => ({
       currentPage,
+      isUserOnLastPage,
+      goToNextPage: jest.fn(() => {
+        wasNextButtonFired = true;
+      }),
     })),
   };
 });
@@ -30,7 +36,24 @@ it('should render the page title', () => {
   expect(getAllByText('Test Page').length).toBe(1);
 });
 
-//b
+it('should disable the Next button when user is on the last page', () => {
+  //act that user is on last page
+  isUserOnLastPage = true;
+
+  const {getByTestId} = render(<PageNavigator />);
+
+  //get the next button..
+  const button = getByTestId('Next.Button');
+
+  //assert 1: that button is disabled prop.. (disabled isn't showing in the props -- figure out why)
+  expect(button.props.accessibilityState.disabled).toEqual(true);
+
+  //fire the button pressed
+  fireEvent.press(button);
+
+  //assert 2: that the state 'wasNextButtonFired' remains as false
+  expect(wasNextButtonFired).toEqual(false);
+});
 
 //next button is disabled when it's the last page
 

@@ -34,6 +34,7 @@ export const PageNavigator = () => {
         size={28}
         disabled={isUserOnLastPage}
         onPress={goToNextPage}
+        testID="Next.Button"
         style={styles.iconButton}
       />
     </View>
