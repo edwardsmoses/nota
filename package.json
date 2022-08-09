@@ -4,7 +4,12 @@
   "private": true,
   "scripts": {
     "postinstall": "patch-package",
-     "xcode": "open ios/nota.xcworkspace"
+    "xcode": "open ios/nota.xcworkspace",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
     "@notionhq/client": "^2.1.1",
