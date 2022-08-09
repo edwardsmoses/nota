@@ -289,7 +289,7 @@ PODS:
     - glog
   - react-native-get-random-values (1.8.0):
     - React-Core
-  - react-native-mmkv (2.4.2):
+  - react-native-mmkv (2.4.3):
     - MMKV (>= 1.2.13)
     - React-Core
   - react-native-skia (0.1.134):
@@ -581,7 +581,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 6aced68014b275b7abd073c9598b0affd0e1669c
   React-logger: bcf33ce10afa135158c72635e621ddb94126c610
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
-  react-native-mmkv: e0fbf896d09b76514b63e6febeb144c6472f00e8
+  react-native-mmkv: 1265a348a4711097ba29c8bcefd5971f48220f2b
   react-native-skia: 0694c5eac15b6ff7b18de20cffe6c8e01a1f759e
   React-perflogger: aa48956d87bae67fc847acc196fae97928b96cd3
   React-RCTActionSheet: 4eaab2b885130ce9a88c8fdac5f1992315da80f6

@@ -3,17 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "start": "react-native start",
-    "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "xcode": "open ios/nota.xcworkspace"
+    "postinstall": "patch-package",
+     "xcode": "open ios/nota.xcworkspace"
   },
   "dependencies": {
     "@notionhq/client": "^2.1.1",
-    "@shopify/react-native-skia": "^0.1.134",
-    "@testing-library/react-native": "^11.0.0",
+    "@shopify/react-native-skia": "0.1.134",
     "react": "18.0.0",
     "react-native": "0.69.0",
     "react-native-get-random-values": "^1.8.0",
@@ -26,6 +21,7 @@
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",
+    "@testing-library/react-native": "^11.0.0",
     "@types/jest": "^28.1.6",
     "@types/react": "^18.0.15",
     "@types/react-native": "^0.69.3",
@@ -37,6 +33,8 @@
     "jest": "^26.5.3",
     "metro-babel-register": "^0.71.3",
     "metro-react-native-babel-preset": "^0.70.3",
+    "patch-package": "^6.4.7",
+    "postinstall-postinstall": "^2.1.0",
     "react-test-renderer": "18.0.0",
     "ts-jest": "^26.5.3",
     "typescript": "^4.4.4"

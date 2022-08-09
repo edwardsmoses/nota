@@ -1,0 +1,22 @@
+diff --git a/node_modules/@shopify/react-native-skia/ios/RNSkia-iOS/SkiaDrawView.mm b/node_modules/@shopify/react-native-skia/ios/RNSkia-iOS/SkiaDrawView.mm
+index a66d93a..f01fc5f 100644
+--- a/node_modules/@shopify/react-native-skia/ios/RNSkia-iOS/SkiaDrawView.mm
++++ b/node_modules/@shopify/react-native-skia/ios/RNSkia-iOS/SkiaDrawView.mm
+@@ -132,7 +132,8 @@
+ - (void) handleTouches:(NSSet<UITouch*>*) touches withEvent:(UIEvent*) event {
+   if (event.type == UIEventTypeTouches) {
+     std::vector<RNSkia::RNSkTouchPoint> nextTouches;
+-    for (UITouch *touch in touches) {
++  for (UITouch *touch in touches) {
++    if(touch.type == UITouchTypePencil){
+       auto position = [touch preciseLocationInView:self];
+       RNSkia::RNSkTouchPoint nextTouch;
+       nextTouch.x = position.x;
+@@ -160,6 +161,7 @@
+       
+       nextTouches.push_back(nextTouch);
+     }
++    }
+     if(_impl != nullptr) {
+       _impl->updateTouchState(std::move(nextTouches));
+     }
