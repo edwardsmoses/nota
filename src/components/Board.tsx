@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, RefObject} from 'react';
 import {StyleSheet} from 'react-native';
 import {
   Canvas,
@@ -11,6 +11,7 @@ import {
   SkiaView,
   useDrawCallback,
   PaintStyle,
+  usePaintRef,
 } from '@shopify/react-native-skia';
 
 import {storage, useNote} from '@storage/storage';
@@ -25,6 +26,8 @@ export const Board = () => {
   const {currentPageKey} = useNote();
 
   const eraserPath = Skia.Path.Make();
+
+  const drawViewRef = useRef<SkiaView | null>(null);
 
   const onDraw = useDrawCallback(
     (canvas, info) => {
@@ -68,7 +71,22 @@ export const Board = () => {
     [currentPageKey],
   );
 
-  return <SkiaView style={styles.canvas} onDraw={onDraw} />;
+  return (
+    <SkiaView
+      ref={drawViewRef}
+      onTouchEnd={() => {
+        console.log('are you called when touch end');
+        if (drawViewRef.current) {
+          console.log(
+            'images',
+            drawViewRef.current?.makeImageSnapshot().encodeToBase64(),
+          );
+        }
+      }}
+      style={styles.canvas}
+      onDraw={onDraw}
+    />
+  );
 };
 
 export const DrawingBoard = () => {
