@@ -12,6 +12,7 @@ import {
   useDrawCallback,
   PaintStyle,
   usePaintRef,
+  usePicture,
 } from '@shopify/react-native-skia';
 
 import {storage, useNote} from '@storage/storage';
@@ -29,6 +30,8 @@ export const Board = () => {
 
   const drawViewRef = useRef<SkiaView | null>(null);
 
+
+
   const onDraw = useDrawCallback(
     (canvas, info) => {
       console.log('is called');
@@ -36,7 +39,9 @@ export const Board = () => {
       if (hasImage()) {
         const image = getImage();
         if (image) {
-          canvas.drawImage(image, 0, 0, paint.copy());
+          console.log('you have');
+         
+          canvas.drawImage(image, -500,-500);
         }
       } else {
         const pathsInStorage = storage.getString(currentPageKey || '');
@@ -85,6 +90,7 @@ export const Board = () => {
       onTouchEnd={() => {
         console.log('are you called when touch end');
         if (drawViewRef.current) {
+         
           saveCanvas(drawViewRef.current?.makeImageSnapshot().encodeToBase64());
         }
       }}

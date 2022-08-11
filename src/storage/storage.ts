@@ -52,9 +52,17 @@ export const useNote = () => {
     const drawnImage = storage.getString(
       `${NOTE_IMAGE_PREFIX}${currentPageKey || ''}`,
     );
-    const imageData = Skia.Data.fromBase64(drawnImage || '');
 
-    return Skia.Image.MakeImageFromEncoded(imageData);
+    const imageData = Skia.Data.fromBase64(drawnImage || '');
+    const image = Skia.Image.MakeImageFromEncoded(imageData);
+    return image;
+    // if (image) {
+    //   console.log('got here');
+    //   const picture = Skia.Picture.MakePicture(image.encodeToBytes());
+    //   console.log('isnt null', !!picture);
+    //   return picture;
+    // }
+    // return null;
   };
 
   const saveNotesInTransit = () => {
