@@ -3,12 +3,14 @@ const {v4} = require('uuid');
 import {Annotation, NotePage} from '@utils/types';
 import {useEffect} from 'react';
 import {COLORS} from '@utils/colors';
+import {Skia} from '@shopify/react-native-skia';
 
 export const storage = new MMKV();
 
 export const NOTE_PAGES_KEY = 'nota_app_pages';
 export const NOTE_CURRENT_PAGE_KEY = 'nota_app_current_page_key';
 export const NOTE_IN_TRANSIT = 'nota_notes_in_transit';
+export const NOTE_IMAGE_PREFIX = 'nota_notes_image_';
 
 export const useNote = () => {
   const [currentPageKey, setCurrentPageKey] = useMMKVObject<string>(
@@ -35,6 +37,25 @@ export const useNote = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  //concern i have with this - when working with the movable zoom canvas
+  //would this scale - let's get there though...
+  const saveCanvas = (imageInBase64: string) => {
+    storage.set(`${NOTE_IMAGE_PREFIX}${currentPageKey || ''}`, imageInBase64);
+  };
+
+  const hasImage = () => {
+    return storage.contains(`${NOTE_IMAGE_PREFIX}${currentPageKey || ''}`);
+  };
+
+  const getImage = () => {
+    const drawnImage = storage.getString(
+      `${NOTE_IMAGE_PREFIX}${currentPageKey || ''}`,
+    );
+    const imageData = Skia.Data.fromBase64(drawnImage || '');
+
+    return Skia.Image.MakeImageFromEncoded(imageData);
+  };
 
   const saveNotesInTransit = () => {
     //get the current existing paths (annotations) in storage
@@ -106,5 +127,8 @@ export const useNote = () => {
     setNotesInTransit,
     isUserOnFirstPage: currentPageIndex === 0,
     isUserOnLastPage: currentPageIndex === (pages || []).length - 1,
+    saveCanvas,
+    hasImage,
+    getImage,
   };
 };

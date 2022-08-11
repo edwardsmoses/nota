@@ -23,7 +23,7 @@ paint.setAntiAlias(true);
 paint.setBlendMode(BlendMode.Multiply);
 
 export const Board = () => {
-  const {currentPageKey} = useNote();
+  const {currentPageKey, hasImage, getImage, saveCanvas} = useNote();
 
   const eraserPath = Skia.Path.Make();
 
@@ -33,24 +33,32 @@ export const Board = () => {
     (canvas, info) => {
       console.log('is called');
 
-      const pathsInStorage = storage.getString(currentPageKey || '');
-      let paths: Annotation[] = [];
-      if (pathsInStorage) {
-        paths = JSON.parse(pathsInStorage || '') as Array<Annotation>;
-      }
-
-      paths.map(annotation => {
-        if (annotation && annotation.path) {
-          const drawPaint = paint.copy();
-          drawPaint.setColor(Skia.Color(annotation.color));
-          drawPaint.setStyle(PaintStyle.Stroke);
-          drawPaint.setStrokeWidth(annotation.width);
-
-          const drawPath =
-            Skia.Path.MakeFromSVGString(annotation.path) || Skia.Path.Make();
-          canvas.drawPath(drawPath, drawPaint);
+      if (hasImage()) {
+        const image = getImage();
+        if (image) {
+          canvas.drawImage(image, 0, 0, paint.copy());
         }
-      });
+      } else {
+        const pathsInStorage = storage.getString(currentPageKey || '');
+        let paths: Annotation[] = [];
+
+        if (pathsInStorage) {
+          paths = JSON.parse(pathsInStorage || '') as Array<Annotation>;
+        }
+
+        paths.map(annotation => {
+          if (annotation && annotation.path) {
+            const drawPaint = paint.copy();
+            drawPaint.setColor(Skia.Color(annotation.color));
+            drawPaint.setStyle(PaintStyle.Stroke);
+            drawPaint.setStrokeWidth(annotation.width);
+
+            const drawPath =
+              Skia.Path.MakeFromSVGString(annotation.path) || Skia.Path.Make();
+            canvas.drawPath(drawPath, drawPaint);
+          }
+        });
+      }
 
       if (info.touches) {
         console.log('is called only on touches', info.touches);
@@ -77,10 +85,7 @@ export const Board = () => {
       onTouchEnd={() => {
         console.log('are you called when touch end');
         if (drawViewRef.current) {
-          console.log(
-            'images',
-            drawViewRef.current?.makeImageSnapshot().encodeToBase64(),
-          );
+          saveCanvas(drawViewRef.current?.makeImageSnapshot().encodeToBase64());
         }
       }}
       style={styles.canvas}
