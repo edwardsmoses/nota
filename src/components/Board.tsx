@@ -12,6 +12,7 @@ import {
   useDrawCallback,
   PaintStyle,
   PointMode,
+  Color,
 } from '@shopify/react-native-skia';
 
 import {storage, useNote} from '@storage/storage';
@@ -27,22 +28,7 @@ export const Board = () => {
 
   const onDraw = useDrawCallback(
     (canvas, info) => {
-
       console.log('is called');
-
-
-      if (info.touches) {
-        console.log('is called only on touches', info.touches);
-
-        const eraserPaint = Skia.Paint();
-        eraserPaint.setAntiAlias(true);
-        eraserPaint.setBlendMode(BlendMode.Clear);
-
-        info.touches.map(touch => {
-          
-          canvas.drawPoints(PointMode.Points, touch, eraserPaint.copy());
-        });
-      }
 
       const pathsInStorage = storage.getString(currentPageKey || '');
       let paths: Annotation[] = [];
@@ -60,9 +46,23 @@ export const Board = () => {
           const drawPath =
             Skia.Path.MakeFromSVGString(annotation.path) || Skia.Path.Make();
           canvas.drawPath(drawPath, drawPaint);
+          canvas.save();
         }
       });
 
+      if (info.touches) {
+        console.log('is called only on touches', info.touches);
+
+        const eraserPaint = Skia.Paint();
+        eraserPaint.setAntiAlias(true);
+        eraserPaint.setBlendMode(BlendMode.DstOut);
+
+        info.touches.map(touches => {
+          touches.map(touch => {
+            canvas.drawCircle(touch.x, touch.y, 10, eraserPaint);
+          });
+        });
+      }
     },
     [currentPageKey],
   );
