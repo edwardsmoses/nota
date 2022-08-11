@@ -11,8 +11,6 @@ import {
   SkiaView,
   useDrawCallback,
   PaintStyle,
-  PointMode,
-  Color,
 } from '@shopify/react-native-skia';
 
 import {storage, useNote} from '@storage/storage';
@@ -25,6 +23,8 @@ paint.setBlendMode(BlendMode.Multiply);
 
 export const Board = () => {
   const {currentPageKey} = useNote();
+
+  const eraserPath = Skia.Path.Make();
 
   const onDraw = useDrawCallback(
     (canvas, info) => {
@@ -46,7 +46,6 @@ export const Board = () => {
           const drawPath =
             Skia.Path.MakeFromSVGString(annotation.path) || Skia.Path.Make();
           canvas.drawPath(drawPath, drawPaint);
-          canvas.save();
         }
       });
 
@@ -59,7 +58,9 @@ export const Board = () => {
 
         info.touches.map(touches => {
           touches.map(touch => {
-            canvas.drawCircle(touch.x, touch.y, 10, eraserPaint);
+            eraserPath.moveTo(touch.x, touch.y);
+            eraserPath.addCircle(touch.x, touch.y, 10);
+            canvas.drawPath(eraserPath, eraserPaint);
           });
         });
       }
