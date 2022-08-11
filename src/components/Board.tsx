@@ -11,6 +11,7 @@ import {
   SkiaView,
   useDrawCallback,
   PaintStyle,
+  PointMode,
 } from '@shopify/react-native-skia';
 
 import {storage, useNote} from '@storage/storage';
@@ -25,7 +26,24 @@ export const Board = () => {
   const {currentPageKey} = useNote();
 
   const onDraw = useDrawCallback(
-    canvas => {
+    (canvas, info) => {
+
+      console.log('is called');
+
+
+      if (info.touches) {
+        console.log('is called only on touches', info.touches);
+
+        const eraserPaint = Skia.Paint();
+        eraserPaint.setAntiAlias(true);
+        eraserPaint.setBlendMode(BlendMode.Clear);
+
+        info.touches.map(touch => {
+          
+          canvas.drawPoints(PointMode.Points, touch, eraserPaint.copy());
+        });
+      }
+
       const pathsInStorage = storage.getString(currentPageKey || '');
       let paths: Annotation[] = [];
       if (pathsInStorage) {
@@ -44,6 +62,7 @@ export const Board = () => {
           canvas.drawPath(drawPath, drawPaint);
         }
       });
+
     },
     [currentPageKey],
   );

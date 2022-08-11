@@ -24,7 +24,7 @@ const App = () => {
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <Board />
-      <DrawingBoard />
+      {/* <DrawingBoard /> */}
       <Toolbox />
       <PageNavigator />
     </SafeAreaView>
