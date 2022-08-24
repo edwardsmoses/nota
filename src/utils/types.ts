@@ -9,3 +9,8 @@ export type Annotation = {
   color: string;
   width: number;
 };
+
+export type DrawTool = 'Pencil' | 'Eraser';
+export type DrawState = {
+  tool: DrawTool;
+};
