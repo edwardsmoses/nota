@@ -1,0 +1,67 @@
+diff --git a/node_modules/@shopify/react-native-skia/android/cpp/api b/node_modules/@shopify/react-native-skia/android/cpp/api
+index 116e03a..08c0b49 120000
+--- a/node_modules/@shopify/react-native-skia/android/cpp/api
++++ b/node_modules/@shopify/react-native-skia/android/cpp/api
+@@ -1 +1 @@
+-/private/var/folders/mz/9808p0mn3dj3whxp3dkxq_p00000gn/T/tmp-633356oSTfjSag3FT/node_modules/@shopify/react-native-skia/cpp/api
+\ No newline at end of file
++/Users/edwardsmoses/Documents/GitHub/nota/node_modules/@shopify/react-native-skia/cpp/api
+\ No newline at end of file
+diff --git a/node_modules/@shopify/react-native-skia/android/cpp/jsi b/node_modules/@shopify/react-native-skia/android/cpp/jsi
+index 0f346ec..16c2ba5 120000
+--- a/node_modules/@shopify/react-native-skia/android/cpp/jsi
++++ b/node_modules/@shopify/react-native-skia/android/cpp/jsi
+@@ -1 +1 @@
+-/private/var/folders/mz/9808p0mn3dj3whxp3dkxq_p00000gn/T/tmp-633356oSTfjSag3FT/node_modules/@shopify/react-native-skia/cpp/jsi
+\ No newline at end of file
++/Users/edwardsmoses/Documents/GitHub/nota/node_modules/@shopify/react-native-skia/cpp/jsi
+\ No newline at end of file
+diff --git a/node_modules/@shopify/react-native-skia/android/cpp/rnskia b/node_modules/@shopify/react-native-skia/android/cpp/rnskia
+index abd1031..90085be 120000
+--- a/node_modules/@shopify/react-native-skia/android/cpp/rnskia
++++ b/node_modules/@shopify/react-native-skia/android/cpp/rnskia
+@@ -1 +1 @@
+-/private/var/folders/mz/9808p0mn3dj3whxp3dkxq_p00000gn/T/tmp-633356oSTfjSag3FT/node_modules/@shopify/react-native-skia/cpp/rnskia
+\ No newline at end of file
++/Users/edwardsmoses/Documents/GitHub/nota/node_modules/@shopify/react-native-skia/cpp/rnskia
+\ No newline at end of file
+diff --git a/node_modules/@shopify/react-native-skia/android/cpp/skia b/node_modules/@shopify/react-native-skia/android/cpp/skia
+index 98b02c9..1db84a0 120000
+--- a/node_modules/@shopify/react-native-skia/android/cpp/skia
++++ b/node_modules/@shopify/react-native-skia/android/cpp/skia
+@@ -1 +1 @@
+-/private/var/folders/mz/9808p0mn3dj3whxp3dkxq_p00000gn/T/tmp-633356oSTfjSag3FT/node_modules/@shopify/react-native-skia/cpp/skia
+\ No newline at end of file
++/Users/edwardsmoses/Documents/GitHub/nota/node_modules/@shopify/react-native-skia/cpp/skia
+\ No newline at end of file
+diff --git a/node_modules/@shopify/react-native-skia/android/cpp/utils b/node_modules/@shopify/react-native-skia/android/cpp/utils
+index 5889c8d..a00c929 120000
+--- a/node_modules/@shopify/react-native-skia/android/cpp/utils
++++ b/node_modules/@shopify/react-native-skia/android/cpp/utils
+@@ -1 +1 @@
+-/private/var/folders/mz/9808p0mn3dj3whxp3dkxq_p00000gn/T/tmp-633356oSTfjSag3FT/node_modules/@shopify/react-native-skia/cpp/utils
+\ No newline at end of file
++/Users/edwardsmoses/Documents/GitHub/nota/node_modules/@shopify/react-native-skia/cpp/utils
+\ No newline at end of file
+diff --git a/node_modules/@shopify/react-native-skia/ios/RNSkia-iOS/SkiaDrawView.mm b/node_modules/@shopify/react-native-skia/ios/RNSkia-iOS/SkiaDrawView.mm
+index fc16089..4fa1356 100644
+--- a/node_modules/@shopify/react-native-skia/ios/RNSkia-iOS/SkiaDrawView.mm
++++ b/node_modules/@shopify/react-native-skia/ios/RNSkia-iOS/SkiaDrawView.mm
+@@ -136,7 +136,8 @@
+ - (void) handleTouches:(NSSet<UITouch*>*) touches withEvent:(UIEvent*) event {
+   if (event.type == UIEventTypeTouches) {
+     std::vector<RNSkia::RNSkTouchPoint> nextTouches;
+-    for (UITouch *touch in touches) {
++  for (UITouch *touch in touches) {
++    if(touch.type == UITouchTypePencil){
+       auto position = [touch preciseLocationInView:self];
+       RNSkia::RNSkTouchPoint nextTouch;
+       nextTouch.x = position.x;
+@@ -164,6 +165,7 @@
+       
+       nextTouches.push_back(nextTouch);
+     }
++    }
+     if(_impl != nullptr) {
+       _impl->updateTouchState(std::move(nextTouches));
+     }
