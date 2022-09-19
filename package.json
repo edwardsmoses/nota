@@ -14,7 +14,7 @@
   "dependencies": {
     "@notionhq/client": "^2.1.1",
     "@reduxjs/toolkit": "^1.8.4",
-    "@shopify/react-native-skia": "0.1.134",
+    "@shopify/react-native-skia": "0.1.149",
     "react": "18.0.0",
     "react-native": "0.69.0",
     "react-native-get-random-values": "^1.8.0",
