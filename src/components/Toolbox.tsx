@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {IconButton} from 'react-native-paper';
-import {COLORS} from '@utils/colors';
-import {useNote} from '@storage/storage';
+import {COLORS} from 'utils/colors';
+import {useNote} from 'storage/storage';
 import {useDispatch} from 'react-redux';
-import {drawActions} from '@store/slices/draw';
+import {drawActions} from 'store/slices/draw';
 
 export const Toolbox = () => {
   const {addNewPage} = useNote();

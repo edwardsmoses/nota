@@ -1,7 +1,7 @@
 import 'react-native';
 import React from 'react';
-import {PageNavigator} from '@components/PageNavigator';
-import {NotePage} from '@utils/types';
+import {PageNavigator} from 'components/PageNavigator';
+import {NotePage} from 'utils/types';
 
 // Note: test renderer must be required after react-native.
 
@@ -14,7 +14,7 @@ let isUserOnFirstPage: boolean = false;
 let wasLastButtonFired: boolean = false;
 
 //mock the 'useNote' module response
-jest.mock('@storage/storage', () => {
+jest.mock('storage/storage', () => {
   return {
     __esModule: true,
     useNote: jest.fn(() => ({

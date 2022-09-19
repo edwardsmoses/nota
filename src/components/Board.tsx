@@ -13,10 +13,10 @@ import {
   PaintStyle,
 } from '@shopify/react-native-skia';
 
-import {storage, useNote} from '@storage/storage';
-import {Annotation} from '@utils/types';
-import {COLORS} from '@utils/colors';
-import {useAppSelector} from '@store/store';
+import {storage, useNote} from 'storage/storage';
+import {Annotation} from 'utils/types';
+import {COLORS} from 'utils/colors';
+import {useAppSelector} from 'store/store';
 
 const paint = Skia.Paint();
 paint.setAntiAlias(true);

@@ -1,8 +1,8 @@
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import {IconButton, Text} from 'react-native-paper';
-import {COLORS} from '@utils/colors';
-import {useNote} from '@storage/storage';
+import {COLORS} from 'utils/colors';
+import {useNote} from 'storage/storage';
 import {Toolbox} from './Toolbox';
 
 export const PageNavigator = () => {

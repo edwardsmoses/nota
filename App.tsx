@@ -6,11 +6,11 @@ import {
   useColorScheme,
 } from 'react-native';
 
-import {Board} from '@components/Board';
-import {PageNavigator} from '@components/PageNavigator';
-import {COLORS} from '@utils/colors';
+import {Board} from 'components/Board';
+import {PageNavigator} from 'components/PageNavigator';
+import {COLORS} from 'utils/colors';
 import {Provider} from 'react-redux';
-import {store} from '@store/store';
+import {store} from 'store/store';
 
 import {Provider as PaperProvider} from 'react-native-paper';
 

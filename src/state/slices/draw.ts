@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {DrawState, DrawTool} from '@utils/types';
+import {DrawState, DrawTool} from 'utils/types';
 
 const initialState: DrawState = {
   tool: 'Pencil',

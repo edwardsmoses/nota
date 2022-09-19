@@ -10,7 +10,7 @@ import App from '../App';
 import renderer from 'react-test-renderer';
 
 //mock the 'Board' component
-jest.mock('@components/Board', () => ({
+jest.mock('components/Board', () => ({
   __esModule: true,
   Board: 'Board',
   DrawingBoard: 'DrawingBoard',
