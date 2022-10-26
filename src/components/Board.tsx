@@ -23,18 +23,41 @@ paint.setAntiAlias(true);
 paint.setBlendMode(BlendMode.Multiply);
 
 export const Board = () => {
-  const {currentPageKey} = useNote();
+  const {currentPageKey, setNotesInTransit} = useNote();
 
   const currentDrawToolPath = Skia.Path.Make();
 
   const drawViewRef = useRef<SkiaView | null>(null);
 
+  //Canvas Ref
+  const canvasRef = useCanvasRef();
+
+  //The Path for the Drawing Board..
+  let path = useRef<SkPath>(Skia.Path.Make());
+
+  useEffect(() => {
+    path.current.reset();
+  }, [currentPageKey]);
+
+  // Touch handler
+  const touchHandler = useTouchHandler({
+    onStart: touch => {
+      const {x, y} = touch;
+      path.current.moveTo(x, y);
+    },
+    onActive: touch => {
+      const {x, y} = touch;
+      path.current.lineTo(x, y);
+    },
+    onEnd: ({}) => {
+      setNotesInTransit(path.current.toSVGString());
+    },
+  });
+
   const {tool} = useAppSelector(state => state.draw);
 
   const onDraw = useDrawCallback(
     (canvas, info) => {
-      
-
       const pathsInStorage = storage.getString(currentPageKey || '');
       let paths: Annotation[] = [];
 
@@ -91,6 +114,22 @@ export const Board = () => {
       }
     },
     [currentPageKey, tool],
+  );
+
+  return (
+    <Canvas
+      style={[styles.canvas, {
+        backgroundColor: "blue"
+      }]}
+      ref={canvasRef}
+      onTouch={touchHandler}>
+      <Path
+        path={path.current}
+        color={COLORS.LIGHT_BLACK}
+        style={'stroke'}
+        strokeWidth={2}
+      />
+    </Canvas>
   );
 
   return (
