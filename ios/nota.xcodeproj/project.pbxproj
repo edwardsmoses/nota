@@ -570,7 +570,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = nota.app;
+				PRODUCT_BUNDLE_IDENTIFIER = nota.app.dev;
 				PRODUCT_NAME = nota;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -597,7 +597,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = nota.app;
+				PRODUCT_BUNDLE_IDENTIFIER = nota.app.dev;
 				PRODUCT_NAME = nota;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
