@@ -75,6 +75,17 @@ export const Board = () => {
         } else {
           currentDrawToolPath.lineTo(touch.x, touch.y);
         }
+        setTouchPoints(prev => {
+          return prev.map((point, index) => {
+            if (index === prev.length - 1) {
+              return {
+                ...point,
+                path: inProgressPath,
+              };
+            }
+            return point;
+          });
+        });
       }
     },
     onEnd: ({}) => {
@@ -90,6 +101,7 @@ export const Board = () => {
       <Group blendMode="multiply">
         <Drawing
           drawing={({canvas, paint: inProgressDrawPaint}) => {
+            console.log('in progress', touchPoints);
             touchPoints.map(point => {
               if (point.tool === 'Eraser') {
                 inProgressDrawPaint.setAntiAlias(true);
