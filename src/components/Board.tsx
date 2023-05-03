@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, RefObject} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {
   Canvas,
@@ -11,92 +11,142 @@ import {
   SkiaView,
   useDrawCallback,
   PaintStyle,
-  usePaintRef,
-  usePicture,
+  Group,
+  Drawing,
 } from '@shopify/react-native-skia';
 
-import {storage, useNote} from '@storage/storage';
-import {Annotation} from '@utils/types';
-import {COLORS} from '@utils/colors';
+import {storage, useNote} from 'storage/storage';
+import {Annotation, DrawTool} from 'utils/types';
+import {COLORS} from 'utils/colors';
+import {useAppSelector} from 'store/store';
 
 const paint = Skia.Paint();
 paint.setAntiAlias(true);
 paint.setBlendMode(BlendMode.Multiply);
 
-export const Board = () => {
-  const {currentPageKey, hasImage, getImage, saveCanvas} = useNote();
+type Touch = {
+  tool: DrawTool;
+  path: SkPath;
+};
 
-  const eraserPath = Skia.Path.Make();
+export const Board = () => {
+  const {currentPageKey, setNotesInTransit} = useNote();
+
+  const currentDrawToolPath = Skia.Path.Make();
 
   const drawViewRef = useRef<SkiaView | null>(null);
 
+  //Canvas Ref
+  const canvasRef = useCanvasRef();
 
+  //The Path for the Drawing Board..
+  let path = useRef<SkPath>(Skia.Path.Make());
 
-  const onDraw = useDrawCallback(
-    (canvas, info) => {
-      console.log('is called');
+  const [touchPoints, setTouchPoints] = useState<Touch[]>([]);
 
-      if (hasImage()) {
-        const image = getImage();
-        if (image) {
-          console.log('you have');
-         
-          canvas.drawImage(image, -500,-500);
+  useEffect(() => {
+    path.current.reset();
+  }, [currentPageKey]);
+
+  // Touch handler
+  const touchHandler = useTouchHandler({
+    onStart: touch => {
+      const {x, y} = touch;
+
+      const newPath = Skia.Path.Make();
+      newPath.moveTo(x, y);
+
+      setTouchPoints(prev => {
+        return [
+          ...(prev || []),
+          {
+            tool,
+            path: newPath,
+          },
+        ];
+      });
+    },
+    onActive: touch => {
+      const inProgressPath = touchPoints[touchPoints.length - 1]?.path;
+      if (inProgressPath) {
+        if (tool === 'Eraser') {
+          inProgressPath.moveTo(touch.x, touch.y);
+          inProgressPath.addCircle(touch.x, touch.y, 10);
+        } else {
+          currentDrawToolPath.lineTo(touch.x, touch.y);
         }
-      } else {
-        const pathsInStorage = storage.getString(currentPageKey || '');
-        let paths: Annotation[] = [];
-
-        if (pathsInStorage) {
-          paths = JSON.parse(pathsInStorage || '') as Array<Annotation>;
-        }
-
-        paths.map(annotation => {
-          if (annotation && annotation.path) {
-            const drawPaint = paint.copy();
-            drawPaint.setColor(Skia.Color(annotation.color));
-            drawPaint.setStyle(PaintStyle.Stroke);
-            drawPaint.setStrokeWidth(annotation.width);
-
-            const drawPath =
-              Skia.Path.MakeFromSVGString(annotation.path) || Skia.Path.Make();
-            canvas.drawPath(drawPath, drawPaint);
-          }
-        });
-      }
-
-      if (info.touches) {
-        console.log('is called only on touches', info.touches);
-
-        const eraserPaint = Skia.Paint();
-        eraserPaint.setAntiAlias(true);
-        eraserPaint.setBlendMode(BlendMode.DstOut);
-
-        info.touches.map(touches => {
-          touches.map(touch => {
-            eraserPath.moveTo(touch.x, touch.y);
-            eraserPath.addCircle(touch.x, touch.y, 10);
-            canvas.drawPath(eraserPath, eraserPaint);
+        setTouchPoints(prev => {
+          return prev.map((point, index) => {
+            if (index === prev.length - 1) {
+              return {
+                ...point,
+                path: inProgressPath,
+              };
+            }
+            return point;
           });
         });
       }
     },
-    [currentPageKey],
-  );
+    onEnd: ({}) => {
+      setNotesInTransit(path.current.toSVGString());
+    },
+  });
+
+  const {tool} = useAppSelector(state => state.draw);
 
   return (
-    <SkiaView
-      ref={drawViewRef}
-      onTouchEnd={() => {
-        console.log('are you called when touch end');
-        if (drawViewRef.current) {
-         
-          saveCanvas(drawViewRef.current?.makeImageSnapshot().encodeToBase64());
-        }
-      }}
-      style={styles.canvas}
-      onDraw={onDraw}
-    />
+    <Canvas style={[styles.canvas]} ref={canvasRef} onTouch={touchHandler}>
+      {/*  In-progress mode */}
+      <Group blendMode="multiply">
+        <Drawing
+          drawing={({canvas, paint: inProgressDrawPaint}) => {
+            console.log('in progress', touchPoints);
+            touchPoints.map(point => {
+              if (point.tool === 'Eraser') {
+                inProgressDrawPaint.setAntiAlias(true);
+                inProgressDrawPaint.setBlendMode(BlendMode.DstOut);
+
+                canvas.drawPath(point.path, inProgressDrawPaint);
+              } else {
+                inProgressDrawPaint.setColor(Skia.Color(COLORS.LIGHT_BLACK));
+                inProgressDrawPaint.setStyle(PaintStyle.Stroke);
+                inProgressDrawPaint.setStrokeWidth(1.5);
+
+                canvas.drawPath(point.path, inProgressDrawPaint);
+              }
+            });
+          }}
+        />
+      </Group>
+
+      <Group blendMode="multiply">
+        <Drawing
+          drawing={({canvas, paint: drawingPaint}) => {
+            const pathsInStorage = storage.getString(currentPageKey || '');
+            let paths: Annotation[] = [];
+
+            if (pathsInStorage) {
+              paths = JSON.parse(pathsInStorage || '') as Array<Annotation>;
+            }
+
+            paths.map(annotation => {
+              if (annotation && annotation.path) {
+                const drawPaint = drawingPaint.copy();
+                drawPaint.setColor(Skia.Color(annotation.color));
+                drawPaint.setStyle(PaintStyle.Stroke);
+                drawPaint.setStrokeWidth(annotation.width);
+
+                const drawPath =
+                  Skia.Path.MakeFromSVGString(annotation.path) ||
+                  Skia.Path.Make();
+                canvas.drawPath(drawPath, drawPaint);
+              }
+            });
+          }}
+        />
+      </Group>
+    </Canvas>
   );
 };
 

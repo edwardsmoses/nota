@@ -292,32 +292,32 @@ PODS:
   - react-native-mmkv (2.4.3):
     - MMKV (>= 1.2.13)
     - React-Core
-  - react-native-skia (0.1.134):
+  - react-native-skia (0.1.156):
     - React
     - React-callinvoker
     - React-Core
-    - react-native-skia/Api (= 0.1.134)
-    - react-native-skia/Jsi (= 0.1.134)
-    - react-native-skia/RNSkia (= 0.1.134)
-    - react-native-skia/SkiaHeaders (= 0.1.134)
-    - react-native-skia/Utils (= 0.1.134)
-  - react-native-skia/Api (0.1.134):
+    - react-native-skia/Api (= 0.1.156)
+    - react-native-skia/Jsi (= 0.1.156)
+    - react-native-skia/RNSkia (= 0.1.156)
+    - react-native-skia/SkiaHeaders (= 0.1.156)
+    - react-native-skia/Utils (= 0.1.156)
+  - react-native-skia/Api (0.1.156):
     - React
     - React-callinvoker
     - React-Core
-  - react-native-skia/Jsi (0.1.134):
+  - react-native-skia/Jsi (0.1.156):
     - React
     - React-callinvoker
     - React-Core
-  - react-native-skia/RNSkia (0.1.134):
+  - react-native-skia/RNSkia (0.1.156):
     - React
     - React-callinvoker
     - React-Core
-  - react-native-skia/SkiaHeaders (0.1.134):
+  - react-native-skia/SkiaHeaders (0.1.156):
     - React
     - React-callinvoker
     - React-Core
-  - react-native-skia/Utils (0.1.134):
+  - react-native-skia/Utils (0.1.156):
     - React
     - React-callinvoker
     - React-Core
@@ -582,7 +582,7 @@ SPEC CHECKSUMS:
   React-logger: bcf33ce10afa135158c72635e621ddb94126c610
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-mmkv: 1265a348a4711097ba29c8bcefd5971f48220f2b
-  react-native-skia: 0694c5eac15b6ff7b18de20cffe6c8e01a1f759e
+  react-native-skia: 3947424d5927ad64eb7cb76a26399cd45bb6d9b0
   React-perflogger: aa48956d87bae67fc847acc196fae97928b96cd3
   React-RCTActionSheet: 4eaab2b885130ce9a88c8fdac5f1992315da80f6
   React-RCTAnimation: 5e91e3ceb988838fa43615bb602181be30d2b26e

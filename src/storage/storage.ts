@@ -1,8 +1,8 @@
 import {MMKV, useMMKVObject, useMMKVString} from 'react-native-mmkv';
 const {v4} = require('uuid');
-import {Annotation, NotePage} from '@utils/types';
+import {Annotation, NotePage} from 'utils/types';
 import {useEffect} from 'react';
-import {COLORS} from '@utils/colors';
+import {COLORS} from 'utils/colors';
 import {Skia} from '@shopify/react-native-skia';
 
 export const storage = new MMKV();

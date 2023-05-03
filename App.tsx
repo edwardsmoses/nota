@@ -6,10 +6,11 @@ import {
   useColorScheme,
 } from 'react-native';
 
-import {Board, DrawingBoard} from '@components/Board';
-import {Toolbox} from '@components/Toolbox';
-import {PageNavigator} from '@components/PageNavigator';
-import {COLORS} from '@utils/colors';
+import {Board} from 'components/Board';
+import {PageNavigator} from 'components/PageNavigator';
+import {COLORS} from 'utils/colors';
+import {Provider} from 'react-redux';
+import {store} from 'store/store';
 
 import {Provider as PaperProvider} from 'react-native-paper';
 
@@ -24,8 +25,6 @@ const App = () => {
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <Board />
-      {/* <DrawingBoard /> */}
-      <Toolbox />
       <PageNavigator />
     </SafeAreaView>
   );
@@ -36,7 +35,9 @@ const App = () => {
 const Main = () => {
   return (
     <PaperProvider>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </PaperProvider>
   );
 };
